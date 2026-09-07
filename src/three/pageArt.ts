@@ -14,11 +14,26 @@ const SERIF = '"Cormorant Garamond", Georgia, serif';
 const HAND = '"Caveat", "Comic Sans MS", cursive';
 const SANS = '"Jost", system-ui, sans-serif';
 
+let randomState = 1;
+
+function stableSeed(face: PageFace) {
+  let seed = 2166136261;
+  for (const character of JSON.stringify(face)) {
+    seed = Math.imul(seed ^ character.charCodeAt(0), 16777619);
+  }
+  return seed >>> 0 || 1;
+}
+
+function random() {
+  randomState = (Math.imul(1664525, randomState) + 1013904223) >>> 0;
+  return randomState / 4294967296;
+}
+
 function grain(ctx: CanvasRenderingContext2D, amount = 10) {
   const img = ctx.getImageData(0, 0, TEX_W, TEX_H);
   const d = img.data;
   for (let i = 0; i < d.length; i += 4) {
-    const n = (Math.random() - 0.5) * amount;
+    const n = (random() - 0.5) * amount;
     d[i] = (d[i] ?? 0) + n;
     d[i + 1] = (d[i + 1] ?? 0) + n;
     d[i + 2] = (d[i + 2] ?? 0) + n;
@@ -57,8 +72,8 @@ function roughLine(
   ctx.moveTo(x1, y1);
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
-    const x = x1 + (x2 - x1) * t + (Math.random() - 0.5) * wobble;
-    const y = y1 + (y2 - y1) * t + (Math.random() - 0.5) * wobble;
+    const x = x1 + (x2 - x1) * t + (random() - 0.5) * wobble;
+    const y = y1 + (y2 - y1) * t + (random() - 0.5) * wobble;
     ctx.lineTo(x, y);
   }
   ctx.stroke();
@@ -83,8 +98,8 @@ function roughCircle(
   for (let i = 0; i <= 90; i++) {
     const a = (i / 90) * Math.PI * 2 * turns - 0.4;
     const w = 1 + Math.sin(i * 0.7) * 0.02;
-    const x = cx + Math.cos(a) * rx * w + (Math.random() - 0.5) * 3;
-    const y = cy + Math.sin(a) * ry * w + (Math.random() - 0.5) * 3;
+    const x = cx + Math.cos(a) * rx * w + (random() - 0.5) * 3;
+    const y = cy + Math.sin(a) * ry * w + (random() - 0.5) * 3;
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
@@ -343,6 +358,7 @@ function drawDedication(ctx: CanvasRenderingContext2D, f: Extract<PageFace, { ki
 }
 
 export function paintFace(face: PageFace): HTMLCanvasElement {
+  randomState = stableSeed(face);
   const c = document.createElement("canvas");
   c.width = TEX_W;
   c.height = TEX_H;
