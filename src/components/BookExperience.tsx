@@ -38,8 +38,16 @@ export function BookExperience() {
         setReady(true);
       }, 350);
     };
-    if (fonts) fonts.ready.then(done).catch(done);
-    else done();
+    if (fonts) {
+      Promise.all([
+        fonts.ready,
+        fonts.load('600 178px "Cormorant Garamond"'),
+        fonts.load('400 42px "Caveat"'),
+        fonts.load('400 30px "Jost"'),
+      ])
+        .then(done)
+        .catch(done);
+    } else done();
 
     return () => cancelAnimationFrame(raf);
   }, []);
