@@ -5,17 +5,17 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "How to Talk to White Kids About Racism — An interactive book" },
+      { title: "KaushalDrishtiv2" },
       {
         name: "description",
         content:
-          "A dark, cinematic 3D book you can page through: seven honest starting points for talking with children about race.",
+          "KaushalDrishtiv2 is an interactive 3D book experience.",
       },
-      { property: "og:title", content: "How to Talk to White Kids About Racism" },
+      { property: "og:title", content: "KaushalDrishtiv2" },
       {
         property: "og:description",
         content:
-          "An interactive 3D book with seven honest starting points for talking with children about race.",
+          "Explore the interactive KaushalDrishtiv2 3D book experience.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
